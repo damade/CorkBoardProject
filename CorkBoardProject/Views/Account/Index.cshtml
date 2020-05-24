@@ -1,0 +1,19 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+@if (Request.IsAuthenticated)
+{
+
+    <span>Welcome @Html.Encode(User.Identity.Name) </span>
+}
+else
+{
+<h5>
+    You are not Authenticated<br />
+    Kindly Go To  @Html.ActionLink("Log in", "Login") or  @Html.ActionLink("Register", "Register") Page
+</h5>
+}

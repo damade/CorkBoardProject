@@ -1,0 +1,57 @@
+﻿@model IEnumerable<CorkBoardProject.Models.Corkboard>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+<section class="row">
+    <div class="form-group">
+        <div class="col-md-10">
+            <label id="mycorkboard"><strong>My CorkBoards</strong></label>
+            <input id="buttonaddcorkboard" onclick="window.location.href='@Url.Action("AddCorkboard", "CorkBoard")';" type="submit" class="btn btn-default" value="Add CorkBoard" />
+        </div>
+    </div>
+    <br />
+    <hr />
+    @if(!Model.Any())
+    {
+        <p>You have no CorkBoards yet.</p>
+    }
+    else
+    {
+<ul class="row">
+    @foreach (var corkboard in Model)
+    {
+        if (corkboard.VisibilityId == 1)
+        {
+            <li>
+                <label>
+                    @Html.ActionLink(corkboard.Title, "ViewCorkboard", "Corkboard", new { id = corkboard.Cid }, null) <span style="color:red;">(private)</span> with Pushpins
+                </label>
+            </li>
+        }
+        else
+        {
+            <li>
+                <label>
+                    @Html.ActionLink(corkboard.Title, "ViewCorkboard", "Corkboard", new { id = corkboard.Cid }, null) with Pushpins
+                </label>
+            </li>
+        }
+
+    }
+</ul>
+       
+    }
+    <br />
+    <hr />
+    <div class="form-group">
+        <div class="col-md-10">
+            @Html.TextBox("Text", null, htmlAttributes: new { @class = "form-control", PlaceHolder = "Search descriptions, tags and CorkBoard category" })
+            <span>
+                <input id="buttonaddcorkboard" type="submit" class="btn btn-default" value="PushPin Search" />
+            </span>
+        </div>
+    </div>
+</section>
+

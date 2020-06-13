@@ -54,7 +54,7 @@ namespace CorkBoardProject.Controllers
                 }
 
                 ViewBag.Message = "User Details Saved";
-                return View("Register");
+                return View("Login");
             }
             else
             {
@@ -85,7 +85,7 @@ namespace CorkBoardProject.Controllers
                 if (isValidUser != null)
                 {
                     FormsAuthentication.SetAuthCookie(model.Email, false);
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index","CorkBoard");
                 }
                 else
                 {

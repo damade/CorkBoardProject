@@ -113,9 +113,20 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Extrastyles.css" />
     <Content Include="Content\Site.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Models\CorkboardCategory.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>CorkboardCategory.edmx</DependentUpon>
+      <LastGenOutput>CorkboardCategory.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\CorkboardCategory.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>CorkboardCategory.edmx</DependentUpon>
+      <LastGenOutput>CorkboardCategory1.cs</LastGenOutput>
+    </Content>
     <Content Include="Models\Users.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Users.Context.cs</LastGenOutput>
@@ -128,6 +139,30 @@
     </Content>
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <EntityDeploy Include="Models\CorkboardCategory.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>CorkboardCategory.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\CorkboardCategory.edmx.diagram">
+      <DependentUpon>CorkboardCategory.edmx</DependentUpon>
+    </Content>
+    <EntityDeploy Include="Models\Corkboard.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Corkboard.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\Corkboard.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Corkboard.edmx</DependentUpon>
+      <LastGenOutput>Corkboard.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\Corkboard.edmx.diagram">
+      <DependentUpon>Corkboard.edmx</DependentUpon>
+    </Content>
+    <Content Include="Models\Corkboard.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Corkboard.edmx</DependentUpon>
+      <LastGenOutput>Corkboard1.cs</LastGenOutput>
+    </Content>
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -141,9 +176,46 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CorkBoardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Corkboard.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Corkboard.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Corkboard.cs">
+      <DependentUpon>Corkboard.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Corkboard.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Corkboard.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Corkboard1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Corkboard.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CorkboardCategory.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CorkboardCategory.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CorkboardCategory.cs">
+      <DependentUpon>CorkboardCategory.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CorkboardCategory.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CorkboardCategory.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CorkboardCategory1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CorkboardCategory.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\User.cs">
       <DependentUpon>Users.tt</DependentUpon>
@@ -164,6 +236,8 @@
       <DependentUpon>Users.edmx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\AddCorkboardVewModel.cs" />
+    <Compile Include="ViewModels\ConfirmPrivateCorkboardViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\RegisterViewModel.cs" />
   </ItemGroup>
@@ -197,6 +271,10 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\Index.cshtml" />
+    <Content Include="Views\CorkBoard\AddCorkboard.cshtml" />
+    <Content Include="Views\CorkBoard\ConfirmPrivateCorkboard.cshtml" />
+    <Content Include="Views\CorkBoard\Index.cshtml" />
+    <Content Include="Views\CorkBoard\ViewCorkboard.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

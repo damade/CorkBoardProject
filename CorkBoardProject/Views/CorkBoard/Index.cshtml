@@ -13,35 +13,35 @@
     </div>
     <br />
     <hr />
-    @if(!Model.Any())
+    @if (!Model.Any())
     {
         <p>You have no CorkBoards yet.</p>
     }
     else
     {
-<ul class="row">
-    @foreach (var corkboard in Model)
-    {
-        if (corkboard.VisibilityId == 1)
-        {
-            <li>
-                <label>
-                    @Html.ActionLink(corkboard.Title, "ViewCorkboard", "Corkboard", new { id = corkboard.Cid }, null) <span style="color:red;">(private)</span> with Pushpins
-                </label>
-            </li>
-        }
-        else
-        {
-            <li>
-                <label>
-                    @Html.ActionLink(corkboard.Title, "ViewCorkboard", "Corkboard", new { id = corkboard.Cid }, null) with Pushpins
-                </label>
-            </li>
-        }
+        <ul class="row">
+            @foreach (var corkboard in Model)
+            {
+                if (corkboard.VisibilityId == 1)
+                {
+                    <li>
+                        <label>
+                            @Html.ActionLink(corkboard.Title, "ConfirmPrivateCorkboard", "Corkboard", new { id = corkboard.Cid }, null) <span style="color:red;">(private)</span> with Pushpins
+                        </label>
+                    </li>
+                }
+                else
+                {
+                    <li>
+                        <label>
+                            @Html.ActionLink(corkboard.Title, "ViewCorkboard", "Corkboard", new { id = corkboard.Cid }, null) with Pushpins
+                        </label>
+                    </li>
+                }
 
-    }
-</ul>
-       
+            }
+        </ul>
+
     }
     <br />
     <hr />

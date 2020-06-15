@@ -9,7 +9,7 @@
           <Key>
             <PropertyRef Name="Cid" />
           </Key>
-          <Property Name="Cid" Type="int" Nullable="false" />
+          <Property Name="Cid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserId" Type="int" Nullable="false" />
           <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="CategoryId" Type="int" Nullable="false" />
@@ -29,7 +29,7 @@
           <Key>
             <PropertyRef Name="Cid" />
           </Key>
-          <Property Name="Cid" Type="Int32" Nullable="false" />
+          <Property Name="Cid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UserId" Type="Int32" Nullable="false" />
           <Property Name="Title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="CategoryId" Type="Int32" Nullable="false" />

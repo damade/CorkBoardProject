@@ -1,2 +1,2 @@
 # CorkBoardProject
-A WebApp like PInterest to lean ASP.Net MVC
+A WebApp like PInterest to learn ASP.Net MVC

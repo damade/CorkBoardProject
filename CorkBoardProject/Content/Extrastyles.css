@@ -5,3 +5,40 @@
     padding: 8px 8px 8px 8px;
     display:inline-block
 }
+.responsive-image {
+    max-width: 100%;
+    height: auto;
+}
+
+.image-width{
+    max-width: 80%;
+}
+
+.grid-image {
+    border: 1px solid #ddd; /* Gray border */
+    border-radius: 4px; /* Rounded border */
+    padding: 5px; /* Some padding */
+    width: 150px; /* Set a small width */
+}
+
+ /* Add a hover effect (blue shadow) */
+.grid-image:hover {
+       box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+ }
+
+.image-column {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0 4px;
+}
+
+/* Create two equal columns that sits next to each other */
+.image-row {
+    flex: 30%;
+    padding: 0 4px;
+}
+
+ .image-row grid-image {
+        margin-top: 8px;
+        vertical-align: middle;
+}

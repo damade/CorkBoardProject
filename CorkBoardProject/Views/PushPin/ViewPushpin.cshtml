@@ -1,0 +1,23 @@
+﻿@model CorkBoardProject.ViewModels.ViewPushpinViewModel
+@{
+    ViewBag.Title = "ViewPushpin";
+}
+<div style="overflow:hidden;">
+    <h2 style="float:left">@Model.userName </h2>
+</div>
+<p>Pinned @Model.lastUpdateTime on <span>@Html.ActionLink(Model.corkboardTitle, "ViewCorkboard", "Corkboard", new { id = Model.corkboardId}, null)</span></p>
+<hr />
+<br />
+<div style="overflow:hidden;">
+    <p style="float:right">from <a href="@Model.pushpinUrl"> @Model.pushpinUrl</a> </p>
+</div>
+<a href="@Model.pushpinUrl">
+    <img src="@Model.pushpinUrl" class="image-width" alt="@Model.pushpinDescription" />
+</a>
+<hr />
+<p>@Model.pushpinDescription</p>
+<p>Tags: @Model.pushpinTags</p>
+<hr />
+<div class="row">
+    <input onclick="window.location.href='@Url.Action("ViewCorkboard", "CorkBoard",new {id = Model.corkboardId})';" type="submit" value="Back" class="btn btn-default" />
+</div>

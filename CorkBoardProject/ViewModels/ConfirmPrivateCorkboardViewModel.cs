@@ -14,5 +14,7 @@ namespace CorkBoardProject.ViewModels
         public int Pin { get; set; }
 
         public int CId { get; set; }
+
+        public string CorkboardTitle { get; set; }
     }
 }

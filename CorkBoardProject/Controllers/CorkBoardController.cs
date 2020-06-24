@@ -7,11 +7,13 @@ using CorkBoardProject.Models;
 using CorkBoardProject.ViewModels;
 using System.Web.Security;
 using System.Web.UI.WebControls;
+using System.Data.Entity;
 
 namespace CorkBoardProject.Controllers
 {
     public class CorkBoardController : Controller {
-    
+        
+        CorkBoardTemplateEntities3 pushpinDbContext = new CorkBoardTemplateEntities3();
         CorkBoardTemplateEntities2 corkboardDbContext = new CorkBoardTemplateEntities2();
         CorkBoardTemplateEntities1 categoryDbContext = new CorkBoardTemplateEntities1();
         CorkBoardTemplateEntities userDbContext = new CorkBoardTemplateEntities();
@@ -46,6 +48,7 @@ namespace CorkBoardProject.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult SaveCorkboard(AddCorkboardVewModel corkboardDetails)
         {
             if (corkboardDetails.VisibilityTypeId.ToString().Equals("Private"))
@@ -139,14 +142,16 @@ namespace CorkBoardProject.Controllers
         {
             var viewModel = new ConfirmPrivateCorkboardViewModel
             {
-                CId = id
+                CId = id,
+                CorkboardTitle = corkboardDbContext.Corkboards.SingleOrDefault(c => c.Cid == id).Title
+
             };
             return View(viewModel);
         }
 
         //The login form is posted to this method.
         [HttpPost]
-        public ActionResult ConfirmPrivateCorkboard(ConfirmPrivateCorkboardViewModel model)
+        public ActionResult ConfirmPrivateCorkboard(ConfirmPrivateCorkboardViewModel model, int id)
         {
             //Checking the state of model passed as parameter.
             if (ModelState.IsValid)
@@ -161,7 +166,7 @@ namespace CorkBoardProject.Controllers
                     //FormsAuthentication.SetAuthCookie(model.Pin, false);
 
                     var corkboard = corkboardDbContext.Corkboards.SingleOrDefault(c => c.Cid == model.CId);
-                    return View("ViewCorkboard",corkboard);
+                    return RedirectToAction("ViewCorkboard","CorkBoard",new { id = id});
                 }
                 else
                 {
@@ -201,7 +206,19 @@ namespace CorkBoardProject.Controllers
             {
                 return HttpNotFound();
             }
-            return View(corkboard);
+            var viewModel = new ViewCorkboardViewModel
+            {
+                corkboardId = id,
+                watch = corkboard.Watch,
+                corkboardCategory = categoryDbContext.CorkboardCategories.Single(c => c.Id == corkboard.CategoryId).Category,
+                userId = corkboard.UserId,
+                userName = userDbContext.Users.Single(uid => uid.Id == corkboard.UserId).First_Name +" "+
+                userDbContext.Users.Single(uid => uid.Id == corkboard.UserId).Last_Name,
+                corkboardTitle = corkboard.Title,
+                lastUpdateTime = corkboard.DateTime,
+                pushpins = pushpinDbContext.Pushpins.Where(query => query.CorkboardId == id).ToList()
+            };
+            return View(viewModel);
         }
 
        

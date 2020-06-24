@@ -1,0 +1,55 @@
+﻿@model CorkBoardProject.ViewModels.AddPushpinViewModel
+@{
+    ViewBag.Title = "AddPushpin";
+}
+
+<h2>@ViewBag.Title</h2>
+<h3> to @Model.CorkboardTitle</h3>
+<br />
+<hr />
+@using (Html.BeginForm("AddPushpin", "PushPin", FormMethod.Post, new { @class = "form-horizontal", role = "form", id = Model.CorkboardId }))
+{
+    @Html.AntiForgeryToken()
+    <h4>Add a new pushpin.</h4>
+    <div class="row">
+        <!--Show details are saved successfully message-->
+        <div style="color:red;" class="col-lg-12">
+            <ul>
+                <li>
+                    Note that the tag field is optional
+                </li>
+            </ul>
+        </div>
+    </div>
+    <hr />
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Url, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Url, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Description, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextAreaFor(m => m.Description, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Tags, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Tags, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-default" value="Add" />
+        </div>
+    </div>
+
+}
+
+
+

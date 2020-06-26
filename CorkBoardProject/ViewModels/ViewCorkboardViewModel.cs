@@ -11,7 +11,9 @@ namespace CorkBoardProject.ViewModels
     {
         public string userName { get; set; }
 
-        public int userId { get; set; }
+        public int loggedInUserId { get; set; }
+
+        public int corkBoardUserId { get; set; }
 
         public int watch { get; set; }
 

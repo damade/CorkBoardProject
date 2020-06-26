@@ -278,6 +278,7 @@
     <Compile Include="ViewModels\AddCorkboardVewModel.cs" />
     <Compile Include="ViewModels\AddPushpinViewModel.cs" />
     <Compile Include="ViewModels\ConfirmPrivateCorkboardViewModel.cs" />
+    <Compile Include="ViewModels\HomePageViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\RegisterViewModel.cs" />
     <Compile Include="ViewModels\ViewCorkboardViewModel.cs" />

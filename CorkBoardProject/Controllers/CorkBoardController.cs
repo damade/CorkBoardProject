@@ -21,9 +21,46 @@ namespace CorkBoardProject.Controllers
         // GET: CorkBoard
         public ActionResult Index()
         {
+            Dictionary<string,string> rCO = new Dictionary<string, string>();
+
+            Dictionary<string, int> ppCount = new Dictionary<string, int>();
+
             User user = userDbContext.Users.Where(query => query.Email.Equals(User.Identity.Name)).SingleOrDefault();
-            var corkboards = corkboardDbContext.Corkboards.Where(query => query.UserId.Equals(user.Id)).ToList();
-           return View(corkboards);
+
+            var corkboards = corkboardDbContext.Corkboards.Where(query => query.UserId.Equals(user.Id)).OrderBy(cb => cb.Title).ToList();
+
+            var recentCorks = corkboardDbContext.Corkboards.OrderByDescending(cb => cb.DateTime).Take(4).ToList();
+
+            foreach (var eachRecentCorkBoard in recentCorks)
+            {
+                String eachName = userDbContext.Users.Single(uid => uid.Id == eachRecentCorkBoard.UserId).First_Name + " " +
+                       userDbContext.Users.Single(uid => uid.Id == eachRecentCorkBoard.UserId).Last_Name;
+                rCO[eachRecentCorkBoard.Title] = eachName;
+            };
+
+            foreach (var eachRecentCorkBoard in corkboards)
+            {
+                int eachName = pushpinDbContext.Pushpins.Count(x => x.CorkboardId == eachRecentCorkBoard.Cid);
+                ppCount[eachRecentCorkBoard.Title] = eachName;
+            };
+
+
+            var viewModel = new HomePageViewModel
+            {
+                userName = userDbContext.Users.Single(uid => uid.Email == User.Identity.Name).First_Name + " " +
+                userDbContext.Users.Single(uid => uid.Email == User.Identity.Name).Last_Name,
+
+                userDetails =  user,
+
+                myCorkboards = corkboards,
+
+                recentCorkboards = recentCorks,
+
+                pushpinCount = ppCount,
+
+                recentCorkboardOwners = rCO
+            };
+           return View(viewModel);
             
         }
 
@@ -211,7 +248,8 @@ namespace CorkBoardProject.Controllers
                 corkboardId = id,
                 watch = corkboard.Watch,
                 corkboardCategory = categoryDbContext.CorkboardCategories.Single(c => c.Id == corkboard.CategoryId).Category,
-                userId = corkboard.UserId,
+                corkBoardUserId = corkboard.UserId,
+                loggedInUserId = userDbContext.Users.SingleOrDefault(uid => uid.Email == User.Identity.Name).Id,
                 userName = userDbContext.Users.Single(uid => uid.Id == corkboard.UserId).First_Name +" "+
                 userDbContext.Users.Single(uid => uid.Id == corkboard.UserId).Last_Name,
                 corkboardTitle = corkboard.Title,

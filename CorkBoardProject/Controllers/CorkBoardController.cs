@@ -8,11 +8,13 @@ using CorkBoardProject.ViewModels;
 using System.Web.Security;
 using System.Web.UI.WebControls;
 using System.Data.Entity;
+using System.Collections;
 
 namespace CorkBoardProject.Controllers
 {
     public class CorkBoardController : Controller {
-        
+
+        CorkBoardTemplateEntities6 watchDbContext = new CorkBoardTemplateEntities6();
         CorkBoardTemplateEntities3 pushpinDbContext = new CorkBoardTemplateEntities3();
         CorkBoardTemplateEntities2 corkboardDbContext = new CorkBoardTemplateEntities2();
         CorkBoardTemplateEntities1 categoryDbContext = new CorkBoardTemplateEntities1();
@@ -73,6 +75,7 @@ namespace CorkBoardProject.Controllers
             return View(corkboard);
         }
         //Return Register view
+
         public ActionResult AddCorkboard()
         {
             var categoryType = categoryDbContext.CorkboardCategories.ToList();
@@ -243,11 +246,22 @@ namespace CorkBoardProject.Controllers
             {
                 return HttpNotFound();
             }
+            var watchList = watchDbContext.Watchs.Where(w => w.CorkboardId == id).ToList();
+            var watchCount = watchDbContext.Watchs.Count(w => w.CorkboardId == id);
+
+            ArrayList watchEmail = new ArrayList();
+            foreach (var eachLike in watchList)
+            { 
+                watchEmail.Add(userDbContext.Users.SingleOrDefault(u => u.Id == eachLike.UserId).Email);
+            };
+
             var viewModel = new ViewCorkboardViewModel
             {
                 corkboardId = id,
-                watch = corkboard.Watch,
+                watch = watchCount,
+                watchEmail = watchEmail,
                 corkboardCategory = categoryDbContext.CorkboardCategories.Single(c => c.Id == corkboard.CategoryId).Category,
+                corkboardVisibility = corkboardDbContext.Corkboards.SingleOrDefault(c => c.Cid == id).VisibilityId,
                 corkBoardUserId = corkboard.UserId,
                 loggedInUserId = userDbContext.Users.SingleOrDefault(uid => uid.Email == User.Identity.Name).Id,
                 userName = userDbContext.Users.Single(uid => uid.Id == corkboard.UserId).First_Name +" "+
@@ -259,7 +273,28 @@ namespace CorkBoardProject.Controllers
             return View(viewModel);
         }
 
-       
+        
+        public ActionResult IncrementWatch(int corkboardId)
+        {
+            var corkboard = corkboardDbContext.Corkboards.SingleOrDefault(c => c.Cid == corkboardId);
+            if (corkboard == null)
+            {
+                return HttpNotFound();
+            }
+            using (watchDbContext)
+            {
+                Watch watch = new Watch();
+
+                watch.CorkboardId = corkboardId;
+                watch.UserId = userDbContext.Users.SingleOrDefault(uid => uid.Email == User.Identity.Name).Id;
+
+                watchDbContext.Watchs.Add(watch);
+                watchDbContext.SaveChanges();
+            }      
+            return RedirectToAction("ViewCorkboard", "CorkBoard", new { id = corkboardId });
+            //return View(viewModel);
+        }
+
     }
 }
     

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CorkBoardProject.Models;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -26,5 +28,19 @@ namespace CorkBoardProject.ViewModels
 
         [DataType(DataType.DateTime)]
         public DateTime? lastUpdateTime { get; set; }
+
+        [Required]
+        [Display(Name = "Comment")]
+        public string commentToAdd { get; set; }
+
+        public IEnumerable<Comment> pushpinComments { get; set; }
+
+        public IEnumerable<Like> pushpinLikes { get; set; }
+
+        public Dictionary<string, string> commentOwners { get; set; }
+
+        public string allLikes { get; set; }
+
+        public ArrayList likesEmail { get; set; }
     }
 }

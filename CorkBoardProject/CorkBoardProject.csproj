@@ -112,6 +112,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-lum.css" />
+    <Content Include="Content\bootstrap-solar.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -183,6 +185,57 @@
       <DependentUpon>Pushpin.edmx</DependentUpon>
       <LastGenOutput>Pushpin1.cs</LastGenOutput>
     </Content>
+    <EntityDeploy Include="Models\Like.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Like.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\Like.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Like.edmx</DependentUpon>
+      <LastGenOutput>Like.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\Like.edmx.diagram">
+      <DependentUpon>Like.edmx</DependentUpon>
+    </Content>
+    <Content Include="Models\Like.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Like.edmx</DependentUpon>
+      <LastGenOutput>Like1.cs</LastGenOutput>
+    </Content>
+    <EntityDeploy Include="Models\CommentModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>CommentModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\CommentModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>CommentModel.edmx</DependentUpon>
+      <LastGenOutput>CommentModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\CommentModel.edmx.diagram">
+      <DependentUpon>CommentModel.edmx</DependentUpon>
+    </Content>
+    <Content Include="Models\CommentModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>CommentModel.edmx</DependentUpon>
+      <LastGenOutput>CommentModel.cs</LastGenOutput>
+    </Content>
+    <EntityDeploy Include="Models\Watch.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Watch.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\Watch.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Watch.edmx</DependentUpon>
+      <LastGenOutput>Watch.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\Watch.edmx.diagram">
+      <DependentUpon>Watch.edmx</DependentUpon>
+    </Content>
+    <Content Include="Models\Watch.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Watch.edmx</DependentUpon>
+      <LastGenOutput>Watch1.cs</LastGenOutput>
+    </Content>
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -201,6 +254,24 @@
     <Compile Include="Controllers\PushPinController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Comment.cs">
+      <DependentUpon>CommentModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CommentModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CommentModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CommentModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CommentModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CommentModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CommentModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\Corkboard.Context.cs">
       <AutoGen>True</AutoGen>
@@ -238,6 +309,24 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CorkboardCategory.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Like.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Like.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Like.cs">
+      <DependentUpon>Like.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Like.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Like.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Like1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Like.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Pushpin.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -273,6 +362,24 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Users.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Watch.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Watch.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Watch.cs">
+      <DependentUpon>Watch.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Watch.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Watch.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Watch1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Watch.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\AddCorkboardVewModel.cs" />

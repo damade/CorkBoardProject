@@ -2,20 +2,21 @@
 @{
     ViewBag.Title = @Model.corkboardTitle;
 }
-    <div style="overflow:hidden;">
-        <h2 style="float:left">@Model.userName </h2>
-        <h2 style="float:right">@Model.corkboardCategory</h2>
-    </div>
+<div style="overflow:hidden;">
+    <h2 style="float:left">@Model.userName </h2>
+    <h2 style="float:right">@Model.corkboardCategory</h2>
+</div>
 
 
 @if (Model.loggedInUserId == Model.corkBoardUserId)
 {
-<h3>@Model.corkboardTitle</h3>
-<h4>Last Updated @Model.lastUpdateTime <span><input onclick="window.location.href='@Url.Action("AddPushpin", "PushPin", new { id = Model.corkboardId })';" type="submit" value="Add Pushpin" class="btn btn-default" /> </span></h4>
+    <h3>@Model.corkboardTitle</h3>
+    <h4>Last Updated @Model.lastUpdateTime <span><input onclick="window.location.href='@Url.Action("AddPushpin", "PushPin", new { id = Model.corkboardId })';" type="submit" value="Add Pushpin" class="btn btn-default" /> </span></h4>
 }
-else { 
-<h3>@Model.corkboardTitle</h3>
-<h4>Last Updated @Model.lastUpdateTime </h4>
+else
+{
+    <h3>@Model.corkboardTitle</h3>
+    <h4>Last Updated @Model.lastUpdateTime </h4>
 }
 <hr />
 <br />
@@ -24,31 +25,52 @@ else {
     <p>You have no Pushpin yet.</p>
 }
 else
-{   <div class="image-column">
+{ <div class="image-column">
         <div class="image-row">
             @foreach (var pushpin in Model.pushpins)
             {<a href="@Url.Action("ViewPushpin","Pushpin",new {id = pushpin.Pid})">
-                 <img src="@pushpin.Url" class="responsive-image grid-image" alt="@pushpin.Description" />
-             </a>              
+                    <img src="@pushpin.Url" class="responsive-image grid-image" alt="@pushpin.Description" />
+                </a>
             }
         </div>
-        
+
     </div>
 }
 <hr />
-@if (Model.watch > 1)
+@if (Model.loggedInUserId == Model.corkBoardUserId || Model.corkboardVisibility == 1 || Model.watchEmail.Contains(User.Identity.Name))
 {
-<p>This corkboard has @Model.watch watchers</p>
-}
-else if(Model.watch == 1)
-{
-<p>This corkboard has @Model.watch watcher</p>
+    <p>This corkboard has @Model.watch watcher</p>
 }
 else
 {
-<p>This corkboard has @Model.watch watcher</p>
+    if (Model.watch > 1)
+    {
+        <p>
+            This corkboard has @Model.watch watchers
+            <span>
+                <input id="buttonwatch" onclick="window.location.href='@Url.Action("IncrementWatch", "CorkBoard",new {@corkboardId = Model.corkboardId })';" type="submit" class="btn btn-default" value="Watch" />
+            </span>
+        </p>
+    }
+    else if (Model.watch == 1)
+    {
+        <p>
+            This corkboard has @Model.watch watcher
+            <span>
+                <input id="buttonwatch" onclick="window.location.href='@Url.Action("IncrementWatch", "CorkBoard",new {@corkboardId = Model.corkboardId })';" type="submit" class="btn btn-default" value="Watch" />
+            </span>
+        </p>
+    }
+    else
+    {
+        <p>
+            This corkboard has @Model.watch watchers
+            <span>
+                <input id="buttonwatch" onclick="window.location.href='@Url.Action("IncrementWatch", "CorkBoard",new {@corkboardId = Model.corkboardId })';" type="submit" class="btn btn-default" value="Watch" />
+            </span>
+        </p>
+    }
 }
-
 <hr />
 <div class="row">
     <input onclick="window.location.href='@Url.Action("Index", "CorkBoard")';" type="submit" value="Back" class="btn btn-default" />

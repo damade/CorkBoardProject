@@ -1,5 +1,6 @@
 ﻿using CorkBoardProject.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace CorkBoardProject.ViewModels
 
         public int corkboardId{ get; set; }
 
+        public int corkboardVisibility { get; set; }
 
         public string corkboardTitle { get; set; }
         public string corkboardCategory { get; set; }
@@ -27,5 +29,7 @@ namespace CorkBoardProject.ViewModels
 
         [DataType(DataType.DateTime)]
         public DateTime? lastUpdateTime { get; set; }
+
+        public ArrayList watchEmail { get; set; }
     }
 }

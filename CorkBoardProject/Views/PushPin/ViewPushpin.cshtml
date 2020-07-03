@@ -5,7 +5,7 @@
 <div style="overflow:hidden;">
     <h2 style="float:left">@Model.userName </h2>
 </div>
-<p>Pinned @Model.lastUpdateTime on <span>@Html.ActionLink(Model.corkboardTitle, "ViewCorkboard", "Corkboard", new { id = Model.corkboardId}, null)</span></p>
+<p>Pinned @Model.lastUpdateTime on <span>@Html.ActionLink(Model.corkboardTitle, "ViewCorkboard", "Corkboard", new { id = Model.corkboardId }, null)</span></p>
 <hr />
 <br />
 <div style="overflow:hidden;">
@@ -17,6 +17,76 @@
 <hr />
 <p>@Model.pushpinDescription</p>
 <p>Tags: @Model.pushpinTags</p>
+<hr />
+<br />
+@if (!Model.pushpinLikes.Any())
+{
+    <div>
+        <p style="margin:0px 16px 0px 0px ; text-indent: 16px">
+            No like yet, be the first to like it.
+            <span>
+                <input id="buttonlike" onclick="window.location.href='@Url.Action("LikeAction", "Pushpin",new {@likeDecision = 1, @pushpinId = Model.pushpinId })';" type="submit" class="btn btn-default" value="Like!" />
+            </span>
+        </p>
+    </div>
+}
+else
+{
+    if (@Model.likesEmail.Contains(User.Identity.Name))
+    {
+        <div>
+            <p style="margin:0px 16px 0px 0px ; text-indent: 16px">@Model.allLikes
+                <span>
+                    <input id="buttonlike" onclick="window.location.href='@Url.Action("LikeAction", "Pushpin",new {@likeDecision = 0, @pushpinId = Model.pushpinId })';" type="submit" class="btn btn-default" value="UnLike" />
+                </span>
+            </p>
+        </div>
+    }
+    else
+    { 
+        <div>
+            <p style="margin:0px 16px 0px 0px ; text-indent: 16px">@Model.allLikes
+                <span>
+                    <input id="buttonlike" onclick="window.location.href='@Url.Action("LikeAction", "Pushpin",new {@likeDecision = 1, @pushpinId = Model.pushpinId })';" type="submit" class="btn btn-default" value="Like!" />
+                </span>
+            </p>
+        </div>
+    }
+}
+<hr />
+@using (Html.BeginForm("ViewPushpin", "PushPin", FormMethod.Post, new { @class = "form-horizontal", role = "form", id = @Model.pushpinId }))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+
+    <div class="form-group" style="display:inline-block">
+        <span>
+            @Html.TextAreaFor(m => m.commentToAdd, new { @class = "form-control", PlaceHolder = "Enter Comment" })
+        </span>
+        <input type="submit" class="btn btn-default" value="Post Comment" />
+    </div>
+
+}
+@if (!Model.pushpinComments.Any())
+{
+    <p style="margin:0px 16px 0px 0px ; text-indent: 16px">No comment yet, be the first to comment.</p>
+}
+else
+{
+    <div>
+        @foreach (var comment in Model.pushpinComments)
+        {   <ul style="list-style-type:none">
+                <li>
+                    <span class="comment">
+                        <strong>@Model.commentOwners[comment.Comment1] </strong>
+                    </span>
+                    @comment.Comment1
+                </li>
+            </ul>
+        }
+    </div>
+}
 <hr />
 <div class="row">
     <input onclick="window.location.href='@Url.Action("ViewCorkboard", "CorkBoard",new {id = Model.corkboardId})';" type="submit" value="Back" class="btn btn-default" />

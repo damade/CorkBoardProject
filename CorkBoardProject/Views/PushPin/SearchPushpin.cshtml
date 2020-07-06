@@ -1,0 +1,36 @@
+﻿@model CorkBoardProject.ViewModels.SearchPageViewModel
+@{
+    ViewBag.Title = "SearchPushpin";
+}
+<h2>PushPin Search Results</h2>
+@if (!Model.allSearchResult.Any())
+{
+    <p style="margin:0px 16px 0px 0px ; text-indent: 16px">No result found, go back to home page.</p>
+}
+else
+{   
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th><strong>PushPin Description</strong></th>
+                <th><strong>CorkBoard</strong></th>
+                <th><strong>Owner</strong></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var result in Model.allSearchResult)
+            {
+                <tr>
+                    <td>@Html.ActionLink(result.Description, "ViewPushpin", "Pushpin", new { id = result.Pid }, null)</td>
+                    <td>@Model.corkboardResult[result.Description]</td>
+                    <td>@Model.pushpinOwners[result.Description]</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<br />
+<div class="row" style="display:inline-block;vertical-align:top;margin:4px 32px 4px 32px;">
+    <input onclick="window.location.href='@Url.Action("Index", "CorkBoard")';" type="submit" value="Back" class="btn btn-default" />
+</div>
+

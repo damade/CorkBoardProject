@@ -22,7 +22,7 @@ namespace CorkBoardProject.ViewModels
         public IEnumerable<Corkboard> recentCorkboards { get; set; }
 
 
-
+        public string whatToSearch { get; set; }
 
 
     }

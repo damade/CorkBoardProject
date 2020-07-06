@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.WebPages;
 using WebGrease.Css.Ast.Selectors;
 
 namespace CorkBoardProject.Controllers
@@ -134,7 +135,7 @@ namespace CorkBoardProject.Controllers
             }
 
             var corkboard = corkboardDbContext.Corkboards.SingleOrDefault(c => c.Cid == pushpin.CorkboardId);
-            var allComments = commentDbContext.Comments.OrderByDescending(cb => cb.DateTime).ToList();
+            var allComments = commentDbContext.Comments.Where(cb => cb.PushpinId == id).OrderByDescending(cb => cb.DateTime).ToList();
             var allLikesList = likeDBContext.Likes.Where(p => p.PushpinId == id).ToList();
 
             foreach (var eachComments in allComments)
@@ -295,6 +296,67 @@ namespace CorkBoardProject.Controllers
                 return RedirectToAction("ViewPushpin", "Pushpin", new { id = pushpinId });
             }            
             //return View(viewModel);
+        }
+
+        
+        public ActionResult SearchPushpin(string whatToSearch) {
+            if (whatToSearch.IsEmpty()) 
+            {
+                return HttpNotFound();
+            }
+            List<Pushpin> searchResult = new List<Pushpin>();
+            var allPushpins = pushpinDbContext.Pushpins.ToList();
+            var allCorkboards = corkboardDbContext.Corkboards.ToList();
+
+            Dictionary<string, string> corkboardDict = new Dictionary<string, string>();
+
+            Dictionary<string, string> pushpinOwnersDict = new Dictionary<string, string>();
+
+            foreach (var eachpushpin in allPushpins) 
+            {
+                if (eachpushpin.Description.Contains(whatToSearch))
+                {
+                    searchResult.Add(eachpushpin);
+                }
+            }
+
+            foreach (var eachcorkboard in allCorkboards)
+            {
+                string theCorkboardCategory = categoryDbContext.CorkboardCategories.SingleOrDefault(cc => cc.Id == eachcorkboard.CategoryId).Category.ToLower();
+                if (theCorkboardCategory.Contains(whatToSearch))
+                {
+                    foreach (var eachpushpin in allPushpins)
+                    {
+                        if (eachpushpin.CorkboardId == eachcorkboard.Cid && !searchResult.Contains(eachpushpin))
+                        {
+                            searchResult.Add(eachpushpin);
+                        }
+                    }        
+                }
+            }
+
+            foreach (var eachpushpinResult in searchResult)
+            {
+                var eachCorkboard = corkboardDbContext.Corkboards.SingleOrDefault(cc => cc.Cid == eachpushpinResult.CorkboardId);
+                String eachCorkboardTitle = eachCorkboard.Title;
+
+                String eachName = userDbContext.Users.Single(uid => uid.Id == eachCorkboard.UserId).First_Name + " " +
+                       userDbContext.Users.Single(uid => uid.Id == eachCorkboard.UserId).Last_Name;
+
+                pushpinOwnersDict[eachpushpinResult.Description] = eachName;
+                corkboardDict[eachpushpinResult.Description] = eachCorkboardTitle;
+            };
+
+            List<Pushpin> sortedSearchResult = searchResult.OrderBy(s => s.Description).ToList();
+
+            var viewModel = new SearchPageViewModel
+            {
+                allSearchResult = sortedSearchResult,
+                corkboardResult = corkboardDict,
+                pushpinOwners = pushpinOwnersDict
+            };
+
+            return View(viewModel);
         }
     }
 }

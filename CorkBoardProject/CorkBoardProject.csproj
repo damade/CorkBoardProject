@@ -388,6 +388,7 @@
     <Compile Include="ViewModels\HomePageViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\RegisterViewModel.cs" />
+    <Compile Include="ViewModels\SearchPageViewModel.cs" />
     <Compile Include="ViewModels\ViewCorkboardViewModel.cs" />
     <Compile Include="ViewModels\ViewPushpinViewModel.cs" />
   </ItemGroup>
@@ -427,6 +428,7 @@
     <Content Include="Views\CorkBoard\ViewCorkboard.cshtml" />
     <Content Include="Views\PushPin\AddPushpin.cshtml" />
     <Content Include="Views\PushPin\ViewPushpin.cshtml" />
+    <Content Include="Views\PushPin\SearchPushpin.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

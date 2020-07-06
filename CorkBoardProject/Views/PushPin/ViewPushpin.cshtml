@@ -9,7 +9,7 @@
 <hr />
 <br />
 <div style="overflow:hidden;">
-    <p style="float:right">from <a href="@Model.pushpinUrl"> @Model.pushpinUrl</a> </p>
+    <p style="float:right">from <a target="_blank" href="@Model.pushpinUrl"> @Model.pushpinUrl</a> </p>
 </div>
 <a href="@Model.pushpinUrl">
     <img src="@Model.pushpinUrl" class="image-width" alt="@Model.pushpinDescription" />
@@ -24,7 +24,7 @@
     <div>
         <p style="margin:0px 16px 0px 0px ; text-indent: 16px">
             No like yet, be the first to like it.
-            <span>
+            <span style="width:200px;margin-left:32px">
                 <input id="buttonlike" onclick="window.location.href='@Url.Action("LikeAction", "Pushpin",new {@likeDecision = 1, @pushpinId = Model.pushpinId })';" type="submit" class="btn btn-default" value="Like!" />
             </span>
         </p>
@@ -36,7 +36,7 @@ else
     {
         <div>
             <p style="margin:0px 16px 0px 0px ; text-indent: 16px">@Model.allLikes
-                <span>
+                <span style="width:200px;margin-left:32px">
                     <input id="buttonlike" onclick="window.location.href='@Url.Action("LikeAction", "Pushpin",new {@likeDecision = 0, @pushpinId = Model.pushpinId })';" type="submit" class="btn btn-default" value="UnLike" />
                 </span>
             </p>
@@ -46,7 +46,7 @@ else
     { 
         <div>
             <p style="margin:0px 16px 0px 0px ; text-indent: 16px">@Model.allLikes
-                <span>
+                <span style="width:200px;margin-left:32px">
                     <input id="buttonlike" onclick="window.location.href='@Url.Action("LikeAction", "Pushpin",new {@likeDecision = 1, @pushpinId = Model.pushpinId })';" type="submit" class="btn btn-default" value="Like!" />
                 </span>
             </p>
@@ -61,7 +61,7 @@ else
     @Html.ValidationSummary("", new { @class = "text-danger" })
 
     <div class="form-group" style="display:inline-block;vertical-align:top;margin:4px 32px 4px 32px;">
-        <span style="float:left">
+        <span style="float:left; width:300px;">
             @Html.TextAreaFor(m => m.commentToAdd, new { @class = "form-control", PlaceHolder = "Enter Comment" })
         </span>
         <input style="float:left" type="submit" class="btn btn-default" value="Post Comment" />

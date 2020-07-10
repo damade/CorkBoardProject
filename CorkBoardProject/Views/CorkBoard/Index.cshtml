@@ -8,6 +8,8 @@
     <div style="float:left">
         <p>Home Page for</p>
         <h4><strong>@Model.userName</strong></h4>
+        <input onclick="window.location.href='@Url.Action("CorkboardStat", "Pushpin")';" type="submit" class="btn btn-info btn-default" value="Corkboard Statistics" style="margin-right:50px" />
+        <input onclick="window.location.href='@Url.Action("PopularSite", "Pushpin")';" type="submit" class="btn btn-info btn-default" value="Popular Site" style="margin-right:50px" />
     </div>
     <div style="height:100px; float:right; margin-top: -30px;">
         <h2>CorkBoardIt</h2>
@@ -17,18 +19,12 @@
     </div>
    
 </section>
-<hr/>
-<div>
-    <input onclick="window.location.href='@Url.Action("CorkboardStat", "Pushpin")';" type="submit" class="btn btn-info btn-default" value="Corkboard Statistics" style="margin-right:50px" />
-    <input onclick="window.location.href='@Url.Action("PopularSite", "Pushpin")';" type="submit" class="btn btn-info btn-default" value="Popular Site" style="margin-right:50px" />
-</div>
-
 <hr />
 <section class="row">
     <div class="form-group">
         <div class="col-md-10">
             <label id="mycorkboard"><strong>Recent CorkBoard Updates</strong></label>
-            <input id="buttonaddcorkboard" type="submit" class="btn btn-info btn-default" value="Popular Tags" />
+            <input id="buttonaddcorkboard" onclick="window.location.href='@Url.Action("PopularTags", "Pushpin")';" type="submit" class="btn btn-info btn-default" value="Popular Tags" style="margin-left:5px"/>
         </div>
     </div>
     <hr />

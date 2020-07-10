@@ -450,18 +450,26 @@ namespace CorkBoardProject.Controllers
 
         public ActionResult PopularTags()
         {
-            Dictionary<string, int> siteCount = new Dictionary<string, int>();
-
+            
             List<TagCount> tagsResult = new List<TagCount>();
 
-            ArrayList allTags = new ArrayList();
+            var allCorkboards = corkboardDbContext.Corkboards.ToList();
+
+            List<int> allCorkboardId = new List<int>();
+
+            foreach (var item in allCorkboards)
+            {
+                allCorkboardId.Add(item.Cid);
+            }
+
+            List<string> allTags = new List<string>();
 
             var allPushpins = pushpinDbContext.Pushpins.ToList();
 
             foreach (var eachpushpin in allPushpins)
             {
                 string theTagForEachPushpin = eachpushpin.Tags;
-                var splitedTag = theTagForEachPushpin.Split(',',' ');
+                var splitedTag = theTagForEachPushpin.Split(',');
                 foreach (var item in splitedTag)
                 {
                     if (!allTags.Contains(item)) 
@@ -471,11 +479,36 @@ namespace CorkBoardProject.Controllers
                 } 
             }
 
-            var newSiteCount = siteCount.OrderByDescending(sc => sc.Value);
+            foreach (var eachTag in allTags)
+            {
+                Dictionary<int, string> uniqueCorkboardCheckDict = new Dictionary<int, string>();
+                int uniqueCcCount = 0;
+                int ppCount = pushpinDbContext.Pushpins.Where(pp => pp.Tags.Contains(eachTag)).Count();
+                var pushpinsForEachTags = pushpinDbContext.Pushpins.Where(pp => pp.Tags.Contains(eachTag)).ToList();
+
+                foreach (var ePFET in pushpinsForEachTags)
+                {
+                    if (!uniqueCorkboardCheckDict.ContainsKey(ePFET.CorkboardId)) 
+                    {
+                        uniqueCcCount += 1;
+                        uniqueCorkboardCheckDict[ePFET.CorkboardId] = "done";
+                    }
+                }
+
+                TagCount newTag = new TagCount();
+
+                newTag.tag = eachTag;
+                newTag.pushpinCount = ppCount;
+                newTag.corkboardCount = uniqueCcCount;
+
+                tagsResult.Add(newTag);
+            }
+
+            var newTagResult = tagsResult.OrderByDescending(tr => tr.pushpinCount).Take(5).ToList();
 
             var viewModel = new PopularTagViewModel
             {
-                tagSearchResult = tagsResult
+                tagSearchResult = newTagResult
             };
 
             return View(viewModel);

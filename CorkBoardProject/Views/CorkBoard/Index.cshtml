@@ -4,14 +4,31 @@
     ViewBag.Title = "CorkBoardlt Home Page";
 }
 <br />
-<p>Home Page for</p>
-<h4><strong>@Model.userName</strong></h4>
+<section class="jumbotron" style="height:200px; margin: 2px 2px 2px 2px;overflow:hidden;">
+    <div style="float:left">
+        <p>Home Page for</p>
+        <h4><strong>@Model.userName</strong></h4>
+    </div>
+    <div style="height:100px; float:right; margin-top: -30px;">
+        <h2>CorkBoardIt</h2>
+        <p class="lead">
+            Explore.<br />Share.<br />Inspire.
+        </p>
+    </div>
+   
+</section>
+<hr/>
+<div>
+    <input onclick="window.location.href='@Url.Action("CorkboardStat", "Pushpin")';" type="submit" class="btn btn-info btn-default" value="Corkboard Statistics" style="margin-right:50px" />
+    <input onclick="window.location.href='@Url.Action("PopularSite", "Pushpin")';" type="submit" class="btn btn-info btn-default" value="Popular Site" style="margin-right:50px" />
+</div>
+
 <hr />
 <section class="row">
     <div class="form-group">
         <div class="col-md-10">
             <label id="mycorkboard"><strong>Recent CorkBoard Updates</strong></label>
-            <input id="buttonaddcorkboard" type="submit" class="btn btn-default" value="Popular Tags" />
+            <input id="buttonaddcorkboard" type="submit" class="btn btn-info btn-default" value="Popular Tags" />
         </div>
     </div>
     <hr />
@@ -58,7 +75,7 @@
     <div class="form-group">
         <div class="col-md-10">
             <label id="mycorkboard"><strong>My CorkBoards</strong></label>
-            <input id="buttonaddcorkboard" onclick="window.location.href='@Url.Action("AddCorkboard", "CorkBoard")';" type="submit" class="btn btn-default" value="Add CorkBoard" />
+            <input id="buttonaddcorkboard" onclick="window.location.href='@Url.Action("AddCorkboard", "CorkBoard")';" type="submit" class="btn btn-primary btn-default" value="Add CorkBoard" />
         </div>
     </div>
     <hr />
@@ -99,7 +116,7 @@
         <span style="float:left;width:300px;">
             @Html.TextBoxFor(m => m.whatToSearch, null, htmlAttributes: new { @class = "form-control", PlaceHolder = "Search descriptions, tags and CorkBoard category" })
         </span>
-        <input id="buttonsearch" type="submit" class="btn btn-default" value="PushPin Search" />
+        <input id="buttonsearch" type="submit" class="btn btn-info btn-default" value="PushPin Search" />
     </div>
 </form>
     

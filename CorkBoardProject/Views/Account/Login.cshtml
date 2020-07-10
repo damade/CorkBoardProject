@@ -4,7 +4,8 @@
     ViewBag.Message = ", " +
                         "";
 }
-<h2>@ViewBag.Title</h2><hr />
+<h2>@ViewBag.Title</h2>
+<hr />
 <div class="row">
     <div class="col-md-8">
         <section id="loginForm">
@@ -27,7 +28,7 @@
                     </div>
                 </div>
                 <hr />
-                @Html.ValidationSummary(false,"", new { @class = "text-danger" })
+                @Html.ValidationSummary(false, "", new { @class = "text-danger" })
                 <div class="form-group">
                     @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
                     <div class="col-md-10">
@@ -38,7 +39,7 @@
                 <div class="form-group">
                     @Html.LabelFor(m => m.Pin, new { @class = "col-md-2 control-label" })
                     <div class="col-md-10">
-                        @Html.PasswordFor(m => m.Pin, new { @class = "form-control", maxlength = "4" })
+                        @Html.PasswordFor(m => m.Pin, htmlAttributes: new { @class = "form-control numericOnly", maxlength = "4", @onkeypress = "return isNumberKey(event)"})
                         @Html.ValidationMessageFor(m => m.Pin, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -55,4 +56,45 @@
     </div>
 </div>
 
+<script>
+    $(document).ready(function () {
+        $(".numericOnly").bind('keypress', function (e) {
+            if (e.keyCode == '9' || e.keyCode == '16') {
+                return;
+            }
+            var code;
+            if (e.keyCode) code = e.keyCode;
+            else if (e.which) code = e.which;
+            if (e.which == 46)
+                return false;
+            if (code == 8 || code == 46)
+                return true;
+            if (code < 48 || code > 57)
+                return false;
+        });
 
+        //Disable paste
+        $(".numericOnly").bind("paste", function (e) {
+            e.preventDefault();
+        });
+
+        $(".numericOnly").bind('mouseenter', function (e) {
+            var val = $(this).val();
+            if (val != '0') {
+                val = val.replace(/[^0-9]+/g, "")
+                $(this).val(val);
+            }
+        });
+    }
+    );
+</script>
+<script type="text/javascript">
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        if (charCode != 46 && charCode > 31
+            && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+</script>

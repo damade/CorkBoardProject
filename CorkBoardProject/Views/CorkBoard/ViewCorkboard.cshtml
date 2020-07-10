@@ -11,7 +11,7 @@
 @if (Model.loggedInUserId == Model.corkBoardUserId)
 {
     <h3>@Model.corkboardTitle</h3>
-    <h4>Last Updated @Model.lastUpdateTime <span><input onclick="window.location.href='@Url.Action("AddPushpin", "PushPin", new { id = Model.corkboardId })';" type="submit" value="Add Pushpin" class="btn btn-default" /> </span></h4>
+    <h4>Last Updated @Model.lastUpdateTime <span><input onclick="window.location.href='@Url.Action("AddPushpin", "PushPin", new { id = Model.corkboardId })';" type="submit" value="Add Pushpin" class="btn btn-sm btn-primary btn-default" /> </span></h4>
 }
 else
 {

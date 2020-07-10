@@ -252,6 +252,8 @@
     <Compile Include="Controllers\CorkBoardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PushPinController.cs" />
+    <Compile Include="Extra Classes\Stat.cs" />
+    <Compile Include="Extra Classes\TagCount.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -385,8 +387,11 @@
     <Compile Include="ViewModels\AddCorkboardVewModel.cs" />
     <Compile Include="ViewModels\AddPushpinViewModel.cs" />
     <Compile Include="ViewModels\ConfirmPrivateCorkboardViewModel.cs" />
+    <Compile Include="ViewModels\CorkboardStatViewModel.cs" />
     <Compile Include="ViewModels\HomePageViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
+    <Compile Include="ViewModels\PopularSiteViewModel.cs" />
+    <Compile Include="ViewModels\PopularTagViewModel.cs" />
     <Compile Include="ViewModels\RegisterViewModel.cs" />
     <Compile Include="ViewModels\SearchPageViewModel.cs" />
     <Compile Include="ViewModels\ViewCorkboardViewModel.cs" />
@@ -429,6 +434,9 @@
     <Content Include="Views\PushPin\AddPushpin.cshtml" />
     <Content Include="Views\PushPin\ViewPushpin.cshtml" />
     <Content Include="Views\PushPin\SearchPushpin.cshtml" />
+    <Content Include="Views\PushPin\CorkboardStat.cshtml" />
+    <Content Include="Views\PushPin\PopularSite.cshtml" />
+    <Content Include="Views\PushPin\PopularTags.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

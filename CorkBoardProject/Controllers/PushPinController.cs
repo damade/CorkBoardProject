@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CorkBoardProject.Extra_Classes;
 using CorkBoardProject.Models;
 using CorkBoardProject.ViewModels;
 using System;
@@ -108,8 +109,8 @@ namespace CorkBoardProject.Controllers
                   ModelState.AddModelError("Failure", "Enter a valid http or https url");
                   return View("AddPushpin", pushpinDetails);
             }
-            ViewBag.Message = "New CorkBoard has been added saved";
-            return RedirectToAction("Index", "CorkBoard");
+            ViewBag.Message = "New Pushpin has been added saved";
+            return RedirectToAction("ViewCorkboard", "CorkBoard", new { id = id });
         }
 
         bool IsImageUrl(string URL)
@@ -314,7 +315,7 @@ namespace CorkBoardProject.Controllers
 
             foreach (var eachpushpin in allPushpins) 
             {
-                if (eachpushpin.Description.Contains(whatToSearch))
+                if (eachpushpin.Description.Contains(whatToSearch) || eachpushpin.Tags.Contains(whatToSearch))
                 {
                     searchResult.Add(eachpushpin);
                 }
@@ -358,5 +359,128 @@ namespace CorkBoardProject.Controllers
 
             return View(viewModel);
         }
+
+        public ActionResult CorkboardStat()
+        {
+           
+            List<Stat> statResult = new List<Stat>();
+
+            var allUsers = userDbContext.Users.ToList();
+
+            foreach (var eachUser in allUsers)
+            {
+                String eachName = userDbContext.Users.Single(uid => uid.Id == eachUser.Id).First_Name + " " +
+                       userDbContext.Users.Single(uid => uid.Id == eachUser.Id).Last_Name;
+
+                var pubCork = corkboardDbContext.Corkboards.Where(cb => cb.UserId.Equals(eachUser.Id) && cb.VisibilityId.Equals(0)).ToList();
+
+                var priCork = corkboardDbContext.Corkboards.Where(cb => cb.UserId.Equals(eachUser.Id) && cb.VisibilityId.Equals(1)).ToList();
+
+                int puc = corkboardDbContext.Corkboards.Count(cb => cb.UserId.Equals(eachUser.Id) && cb.VisibilityId.Equals(0));
+
+                int prc = corkboardDbContext.Corkboards.Count(cb => cb.UserId.Equals(eachUser.Id) && cb.VisibilityId.Equals(1));
+
+                int cpup = 0;
+
+                int cprp = 0;
+
+                foreach (var eachpubCork in pubCork)
+                {
+                    cpup += pushpinDbContext.Pushpins.Count(pp => pp.CorkboardId == eachpubCork.Cid);
+                }
+
+                foreach (var eachpubCork in priCork)
+                {
+                    cprp += pushpinDbContext.Pushpins.Count(pp => pp.CorkboardId == eachpubCork.Cid);
+                }
+
+                Stat stat = new Stat();
+
+                stat.userName = eachName;
+                stat.pubCbCount = puc;
+                stat.priCbCount = prc;
+                stat.pubPinCount = cpup;
+                stat.priPinCount = cprp;
+
+                statResult.Add(stat);
+
+            }
+
+            List<Stat> sortedStatResult = statResult.OrderByDescending(s => s.pubCbCount).ThenByDescending(s => s.priCbCount).ToList();
+            //searchResult.OrderBy(s => s.Description).ToList();
+
+            var viewModel = new CorkboardStatViewModel
+            {
+                allStatResult = sortedStatResult
+            };
+
+            return View(viewModel);
+        }
+
+        public ActionResult PopularSite()
+        {
+            Dictionary<string, int> siteCount = new Dictionary<string, int>();
+
+            var allPushpins = pushpinDbContext.Pushpins.ToList();
+
+            foreach (var eachpushpin in allPushpins)
+            {
+                var uri = new Uri(eachpushpin.Url);
+                string hostSite = uri.Host;
+                if (siteCount.ContainsKey(hostSite))
+                {
+                    int currentCount = siteCount[hostSite];
+                    siteCount[hostSite] = (currentCount += 1);
+                }
+                else
+                {
+                    siteCount[hostSite] = 1;
+                }
+            }
+
+            var newSiteCount = siteCount.OrderByDescending(sc => sc.Value);
+
+            var viewModel = new PopularSiteViewModel
+            {
+                websiteCount = newSiteCount
+            };
+
+            return View(viewModel);
+        }
+
+        public ActionResult PopularTags()
+        {
+            Dictionary<string, int> siteCount = new Dictionary<string, int>();
+
+            List<TagCount> tagsResult = new List<TagCount>();
+
+            ArrayList allTags = new ArrayList();
+
+            var allPushpins = pushpinDbContext.Pushpins.ToList();
+
+            foreach (var eachpushpin in allPushpins)
+            {
+                string theTagForEachPushpin = eachpushpin.Tags;
+                var splitedTag = theTagForEachPushpin.Split(',',' ');
+                foreach (var item in splitedTag)
+                {
+                    if (!allTags.Contains(item)) 
+                    {
+                        allTags.Add(item);
+                    }
+                } 
+            }
+
+            var newSiteCount = siteCount.OrderByDescending(sc => sc.Value);
+
+            var viewModel = new PopularTagViewModel
+            {
+                tagSearchResult = tagsResult
+            };
+
+            return View(viewModel);
+        }
+
+
     }
 }

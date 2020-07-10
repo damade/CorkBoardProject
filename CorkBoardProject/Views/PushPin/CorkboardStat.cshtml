@@ -1,0 +1,43 @@
+﻿@model CorkBoardProject.ViewModels.CorkboardStatViewModel
+@{
+    ViewBag.Title = "CorkboardStat";
+}
+
+<h2>Corkboard Statistics</h2>
+@if (!Model.allStatResult.Any())
+{
+    <p style="margin:0px 16px 0px 0px ; text-indent: 16px">No result found, go back to home page.</p>
+}
+else
+{
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th><strong>User </strong></th>
+                <th><strong>Public CorkBoards Count</strong></th>
+                <th><strong>Pushpins Count Across Public Corkboards</strong></th>
+                <th><strong>Private CorkBoards Count</strong></th>
+                <th><strong>Pushpins Count Across Private Corkboards</strong></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var result in Model.allStatResult)
+            {
+            <tr>
+                <td style="color:red;">@result.userName</td>
+                <td style="color:red;">@result.pubCbCount</td>
+                <td style="color:red;">@result.pubPinCount</td>
+                <td style="color:red;">@result.priCbCount</td>
+                <td style="color:red;">@result.priPinCount</td>
+               
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+<br />
+<h4><span style="color:red;">&#42</span> Note that the statistics is updated at real-time which is as at now (@DateTime.Now). </h4>
+<hr />
+<div class="row" style="display:inline-block;vertical-align:top;margin:4px 32px 4px 32px;">
+    <input onclick="window.location.href='@Url.Action("Index", "CorkBoard")';" type="submit" value="Back" class="btn btn-default" />
+</div>

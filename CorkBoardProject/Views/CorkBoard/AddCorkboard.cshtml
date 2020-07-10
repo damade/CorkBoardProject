@@ -33,7 +33,7 @@
     <div class="form-group">
         @Html.LabelFor(m => m.CategoryTypeId, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.DropDownListFor(m => m.CategoryTypeId, new SelectList(Model.CorkboardCategories, "Id", "Category"), "Select CorkBoard Category", new {@class = "form-control" })
+            @Html.DropDownListFor(m => m.CategoryTypeId, new SelectList(Model.CorkboardCategories, "Id", "Category"), "Select CorkBoard Category", new { @class = "form-control" })
         </div>
     </div>
     <div class="form-group">
@@ -44,7 +44,7 @@
             <br />
             @Html.RadioButtonFor(m => m.VisibilityTypeId, "Private", new { @class = "form-check-input" })
             Private
-            @Html.PasswordFor(m => m.Pin, htmlAttributes: new {PlaceHolder = "Enter Pin" })
+            @Html.PasswordFor(m => m.Pin, htmlAttributes: new { @class = "form-control numericOnly", maxlength = "4", @onkeypress = "return isNumberKey(event)" })
         </div>
     </div>
     <div class="form-group">
@@ -52,7 +52,51 @@
             <input type="submit" class="btn btn-default" value="Add" />
         </div>
     </div>
-   
+
 }
+
+
+<script>
+    $(document).ready(function () {
+        $(".numericOnly").bind('keypress', function (e) {
+            if (e.keyCode == '9' || e.keyCode == '16') {
+                return;
+            }
+            var code;
+            if (e.keyCode) code = e.keyCode;
+            else if (e.which) code = e.which;
+            if (e.which == 46)
+                return false;
+            if (code == 8 || code == 46)
+                return true;
+            if (code < 48 || code > 57)
+                return false;
+        });
+
+        //Disable paste
+        $(".numericOnly").bind("paste", function (e) {
+            e.preventDefault();
+        });
+
+        $(".numericOnly").bind('mouseenter', function (e) {
+            var val = $(this).val();
+            if (val != '0') {
+                val = val.replace(/[^0-9]+/g, "")
+                $(this).val(val);
+            }
+        });
+    }
+    );
+</script>
+<script type="text/javascript">
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        if (charCode != 46 && charCode > 31
+            && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+</script>
 
 

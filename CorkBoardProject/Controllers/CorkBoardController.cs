@@ -7,20 +7,63 @@ using CorkBoardProject.Models;
 using CorkBoardProject.ViewModels;
 using System.Web.Security;
 using System.Web.UI.WebControls;
+using System.Data.Entity;
+using System.Collections;
 
 namespace CorkBoardProject.Controllers
 {
-    public class CorkBoardController : Controller
-    {
+    public class CorkBoardController : Controller {
+
+        CorkBoardTemplateEntities6 watchDbContext = new CorkBoardTemplateEntities6();
+        CorkBoardTemplateEntities3 pushpinDbContext = new CorkBoardTemplateEntities3();
         CorkBoardTemplateEntities2 corkboardDbContext = new CorkBoardTemplateEntities2();
         CorkBoardTemplateEntities1 categoryDbContext = new CorkBoardTemplateEntities1();
         CorkBoardTemplateEntities userDbContext = new CorkBoardTemplateEntities();
 
         // GET: CorkBoard
-        public ViewResult Index()
+        public ActionResult Index()
         {
-            var corkboards = corkboardDbContext.Corkboards.ToList();
-            return View(corkboards);
+            Dictionary<string,string> rCO = new Dictionary<string, string>();
+
+            Dictionary<string, int> ppCount = new Dictionary<string, int>();
+
+            User user = userDbContext.Users.Where(query => query.Email.Equals(User.Identity.Name)).SingleOrDefault();
+
+            var corkboards = corkboardDbContext.Corkboards.Where(query => query.UserId.Equals(user.Id)).OrderBy(cb => cb.Title).ToList();
+
+            var recentCorks = corkboardDbContext.Corkboards.OrderByDescending(cb => cb.DateTime).Take(4).ToList();
+
+            foreach (var eachRecentCorkBoard in recentCorks)
+            {
+                String eachName = userDbContext.Users.Single(uid => uid.Id == eachRecentCorkBoard.UserId).First_Name + " " +
+                       userDbContext.Users.Single(uid => uid.Id == eachRecentCorkBoard.UserId).Last_Name;
+                rCO[eachRecentCorkBoard.Title] = eachName;
+            };
+
+            foreach (var eachRecentCorkBoard in corkboards)
+            {
+                int eachName = pushpinDbContext.Pushpins.Count(x => x.CorkboardId == eachRecentCorkBoard.Cid);
+                ppCount[eachRecentCorkBoard.Title] = eachName;
+            };
+
+
+            var viewModel = new HomePageViewModel
+            {
+                userName = userDbContext.Users.Single(uid => uid.Email == User.Identity.Name).First_Name + " " +
+                userDbContext.Users.Single(uid => uid.Email == User.Identity.Name).Last_Name,
+
+                userDetails =  user,
+
+                myCorkboards = corkboards,
+
+                recentCorkboards = recentCorks,
+
+                pushpinCount = ppCount,
+
+                recentCorkboardOwners = rCO
+            };
+           return View(viewModel);
+            
         }
 
         public ActionResult CorkboardDetails(int id)
@@ -32,6 +75,7 @@ namespace CorkBoardProject.Controllers
             return View(corkboard);
         }
         //Return Register view
+
         public ActionResult AddCorkboard()
         {
             var categoryType = categoryDbContext.CorkboardCategories.ToList();
@@ -44,26 +88,18 @@ namespace CorkBoardProject.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult SaveCorkboard(AddCorkboardVewModel corkboardDetails)
         {
-            //We check if the model state is valid or not. We have used DataAnnotation attributes.
-            //If any form value fails the DataAnnotation validation the model state becomes invalid.
-            if (!ModelState.IsValid) {
-                var categoryType = categoryDbContext.CorkboardCategories.ToList();
-
-                var viewModel = new AddCorkboardVewModel
+            if (corkboardDetails.VisibilityTypeId.ToString().Equals("Private"))
+            {
+                if (ModelState.IsValid)
                 {
-                    CorkboardCategories = categoryType
-                };
-                return View("AddCorkboard",viewModel);
-            }
-                //create database context using Entity framework 
-                using (corkboardDbContext)
-                {
-                    if (corkboardDetails.VisibilityTypeId.ToString().Equals("Private")) {
-
+                    //create database context using Entity framework 
+                    using (corkboardDbContext)
+                    {
                         User user = userDbContext.Users.Where(query => query.Email.Equals(User.Identity.Name)
-                        && query.Password.Equals(corkboardDetails.Pin)).SingleOrDefault();
+                                  && query.Password.Equals(corkboardDetails.Pin)).SingleOrDefault();
                         if (user != null)
                         {
                             CorkboardCategory corkboardCategory = categoryDbContext.
@@ -80,18 +116,41 @@ namespace CorkBoardProject.Controllers
 
                             corkboardDbContext.Corkboards.Add(corkboard);
                             corkboardDbContext.SaveChanges();
-                    }
-                        else {
+                        }
+                        else
+                        {
+                            var categoryType = categoryDbContext.CorkboardCategories.ToList();
+
+                            var viewModel = new AddCorkboardVewModel
+                            {
+                                CorkboardCategories = categoryType
+                            };
                             ModelState.AddModelError("Failure", "Wrong Password!");
-                            return RedirectToAction("AddCorkboard", "CorkBoard");
+                            return View("AddCorkboard", viewModel);
                         }
                     }
-                    else if (corkboardDetails.VisibilityTypeId.ToString().Equals("Public")) {
-                        Corkboard corkboard = new Corkboard();
+                }
+                else
+                {
+                    var categoryType = categoryDbContext.CorkboardCategories.ToList();
+
+                    var viewModel = new AddCorkboardVewModel
+                    {
+                        CorkboardCategories = categoryType
+                    };
+                    return View("AddCorkboard", viewModel);
+                }
+            }
+            else if (corkboardDetails.VisibilityTypeId.ToString().Equals("Public"))
+            {
+                    //create database context using Entity framework 
+                    using (corkboardDbContext)
+                    {
+                       Corkboard corkboard = new Corkboard();
                         CorkboardCategory corkboardCategory = categoryDbContext.
-                                                            CorkboardCategories.
-                                                            Where(query => query.Id.Equals(corkboardDetails.CategoryTypeId))
-                                                            .SingleOrDefault();
+                                                CorkboardCategories.
+                                                Where(query => query.Id.Equals(corkboardDetails.CategoryTypeId))
+                                                .SingleOrDefault();
 
                         string Email = User.Identity.Name;
                         User user = userDbContext.Users.Where(query => query.Email.Equals(Email)).SingleOrDefault();
@@ -104,21 +163,35 @@ namespace CorkBoardProject.Controllers
 
                         corkboardDbContext.Corkboards.Add(corkboard);
                         corkboardDbContext.SaveChanges();
-                }
-                }
-                 
-                 ViewBag.Message = "New CorkBoard has been added saved";
-                 return RedirectToAction("Index", "CorkBoard");
+                    }
+            }
+            else {
+                var categoryType = categoryDbContext.CorkboardCategories.ToList();
+
+                var viewModel = new AddCorkboardVewModel
+                {
+                    CorkboardCategories = categoryType
+                };
+                return View("AddCorkboard", viewModel);
+            }
+            ViewBag.Message = "New CorkBoard has been added saved";
+            return RedirectToAction("Index", "CorkBoard");
         }
-        
-        public ActionResult ConfirmPrivateCorkBoard()
+
+        public ActionResult ConfirmPrivateCorkBoard(int id)
         {
-            return View();
+            var viewModel = new ConfirmPrivateCorkboardViewModel
+            {
+                CId = id,
+                CorkboardTitle = corkboardDbContext.Corkboards.SingleOrDefault(c => c.Cid == id).Title
+
+            };
+            return View(viewModel);
         }
 
         //The login form is posted to this method.
         [HttpPost]
-        public ActionResult ConfirmPrivateCorkboard(ConfirmPrivateCorkboardViewModel model)
+        public ActionResult ConfirmPrivateCorkboard(ConfirmPrivateCorkboardViewModel model, int id)
         {
             //Checking the state of model passed as parameter.
             if (ModelState.IsValid)
@@ -131,7 +204,9 @@ namespace CorkBoardProject.Controllers
                 if (isValidPassword != null)
                 {
                     //FormsAuthentication.SetAuthCookie(model.Pin, false);
-                    return RedirectToAction("ViewCorkboard");
+
+                    var corkboard = corkboardDbContext.Corkboards.SingleOrDefault(c => c.Cid == model.CId);
+                    return RedirectToAction("ViewCorkboard","CorkBoard",new { id = id});
                 }
                 else
                 {
@@ -171,10 +246,55 @@ namespace CorkBoardProject.Controllers
             {
                 return HttpNotFound();
             }
-            return View(corkboard);
+            var watchList = watchDbContext.Watchs.Where(w => w.CorkboardId == id).ToList();
+            var watchCount = watchDbContext.Watchs.Count(w => w.CorkboardId == id);
+
+            ArrayList watchEmail = new ArrayList();
+            foreach (var eachLike in watchList)
+            { 
+                watchEmail.Add(userDbContext.Users.SingleOrDefault(u => u.Id == eachLike.UserId).Email);
+            };
+
+            var viewModel = new ViewCorkboardViewModel
+            {
+                corkboardId = id,
+                watch = watchCount,
+                watchEmail = watchEmail,
+                corkboardCategory = categoryDbContext.CorkboardCategories.Single(c => c.Id == corkboard.CategoryId).Category,
+                corkboardVisibility = corkboardDbContext.Corkboards.SingleOrDefault(c => c.Cid == id).VisibilityId,
+                corkBoardUserId = corkboard.UserId,
+                loggedInUserId = userDbContext.Users.SingleOrDefault(uid => uid.Email == User.Identity.Name).Id,
+                userName = userDbContext.Users.Single(uid => uid.Id == corkboard.UserId).First_Name +" "+
+                userDbContext.Users.Single(uid => uid.Id == corkboard.UserId).Last_Name,
+                corkboardTitle = corkboard.Title,
+                lastUpdateTime = corkboard.DateTime,
+                pushpins = pushpinDbContext.Pushpins.Where(query => query.CorkboardId == id).ToList()
+            };
+            return View(viewModel);
         }
 
-       
+        
+        public ActionResult IncrementWatch(int corkboardId)
+        {
+            var corkboard = corkboardDbContext.Corkboards.SingleOrDefault(c => c.Cid == corkboardId);
+            if (corkboard == null)
+            {
+                return HttpNotFound();
+            }
+            using (watchDbContext)
+            {
+                Watch watch = new Watch();
+
+                watch.CorkboardId = corkboardId;
+                watch.UserId = userDbContext.Users.SingleOrDefault(uid => uid.Email == User.Identity.Name).Id;
+
+                watchDbContext.Watchs.Add(watch);
+                watchDbContext.SaveChanges();
+            }      
+            return RedirectToAction("ViewCorkboard", "CorkBoard", new { id = corkboardId });
+            //return View(viewModel);
+        }
+
     }
 }
     

@@ -6,10 +6,10 @@ using System.Web.Mvc;
 
 namespace CorkBoardProject.Controllers
 {
+    [AllowAnonymous]
     public class HomeController : Controller
     {
 
-        [AllowAnonymous]
         // GET: Home
         public ActionResult Index()
         {

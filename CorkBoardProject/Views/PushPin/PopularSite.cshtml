@@ -1,0 +1,37 @@
+﻿@model CorkBoardProject.ViewModels.PopularSiteViewModel
+@{
+    ViewBag.Title = "PopularSite";
+}
+<h2>PopularSite</h2>
+@if (!Model.websiteCount.Any())
+{
+    <p style="margin:0px 16px 0px 0px ; text-indent: 16px">No result found, go back to home page.</p>
+}
+else
+{
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th style="text-align:center;"><strong>Website Address </strong></th>
+                <th style="text-align:center;"><strong>Pushpin Count Attached To Website Address </strong></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var result in Model.websiteCount)
+            {
+                <tr>
+                    <td style="color:teal;text-align:center;"><strong>@result.Key</strong></td>
+                    <td style="color:teal;text-align:center;"><strong>@result.Value</strong></td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<br />
+<h4 style="color:royalblue;"><span style="color:red;">&#42</span> Note that the statistics is valid at real-time which is as at now (@DateTime.Now). </h4>
+<hr />
+<div class="row" style="display:inline-block;vertical-align:top;margin:4px 32px 4px 32px;">
+    <input onclick="window.location.href='@Url.Action("Index", "CorkBoard")';" type="submit" value="Back" class="btn btn-default" />
+</div>
+

@@ -12,5 +12,9 @@ namespace CorkBoardProject.ViewModels
         [DataType(DataType.Password)]
         [RegularExpression("^[0-9]{4}$", ErrorMessage = "Pin should be four digits")]
         public int Pin { get; set; }
+
+        public int CId { get; set; }
+
+        public string CorkboardTitle { get; set; }
     }
 }

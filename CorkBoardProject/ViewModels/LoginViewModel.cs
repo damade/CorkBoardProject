@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace CorkBoardProject.ViewModels
 {
@@ -14,6 +15,7 @@ namespace CorkBoardProject.ViewModels
 
         [Required]
         [DataType(DataType.Password)]
+        [HiddenInput]
         [RegularExpression("^[0-9]{4}$", ErrorMessage = "Pin should be four digits")]
         public int Pin { get; set; }
     }

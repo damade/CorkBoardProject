@@ -27,7 +27,7 @@ namespace CorkBoardProject.ViewModels
         [Display(Name = "Visibility")]
         public string VisibilityTypeId { get; set; }
 
-        [Required(ErrorMessage = "Wrong Pin to Authenticate it")]
+        [Required(ErrorMessage ="Wrong Pin")]
         [DataType(DataType.Password)]
         [RegularExpression("^[0-9]{4}$", ErrorMessage = "Pin should be four digits")]
         public int Pin { get; set; }

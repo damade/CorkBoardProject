@@ -1,57 +1,120 @@
-﻿@model IEnumerable<CorkBoardProject.Models.Corkboard>
+﻿
+@model CorkBoardProject.ViewModels.HomePageViewModel
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "CorkBoardlt Home Page";
 }
-
-<h2>Index</h2>
+<br />
+<section class="jumbotron" style="height:200px; margin: 2px 2px 2px 2px;overflow:hidden;">
+    <div style="float:left">
+        <p>Home Page for</p>
+        <h4><strong>@Model.userName</strong></h4>
+        <input onclick="window.location.href='@Url.Action("CorkboardStat", "Pushpin")';" type="submit" class="btn btn-info btn-default" value="Corkboard Statistics" style="margin-right:50px" />
+        <input onclick="window.location.href='@Url.Action("PopularSite", "Pushpin")';" type="submit" class="btn btn-info btn-default" value="Popular Site" style="margin-right:50px" />
+    </div>
+    <div style="height:100px; float:right; margin-top: -30px;">
+        <h2>CorkBoardIt</h2>
+        <p class="lead">
+            Explore.<br />Share.<br />Inspire.
+        </p>
+    </div>
+   
+</section>
+<hr />
 <section class="row">
     <div class="form-group">
         <div class="col-md-10">
-            <label id="mycorkboard"><strong>My CorkBoards</strong></label>
-            <input id="buttonaddcorkboard" onclick="window.location.href='@Url.Action("AddCorkboard", "CorkBoard")';" type="submit" class="btn btn-default" value="Add CorkBoard" />
+            <label id="mycorkboard"><strong>Recent CorkBoard Updates</strong></label>
+            <input id="buttonaddcorkboard" onclick="window.location.href='@Url.Action("PopularTags", "Pushpin")';" type="submit" class="btn btn-info btn-default" value="Popular Tags" style="margin-left:5px"/>
         </div>
     </div>
-    <br />
     <hr />
-    @if(!Model.Any())
+    @if (!Model.recentCorkboards.Any())
     {
-        <p>You have no CorkBoards yet.</p>
+        <p style="margin:0px 16px 0px 0px ; text-indent: 16px">No recent CorkBoards yet.</p>
     }
     else
     {
 <ul class="row">
-    @foreach (var corkboard in Model)
+    @foreach (var corkboard in Model.recentCorkboards)
     {
         if (corkboard.VisibilityId == 1)
         {
-            <li>
+            <li style="list-style-type:none">
                 <label>
-                    @Html.ActionLink(corkboard.Title, "ViewCorkboard", "Corkboard", new { id = corkboard.Cid }, null) <span style="color:red;">(private)</span> with Pushpins
+                    <strong> @Html.ActionLink(corkboard.Title, "ConfirmPrivateCorkboard", "Corkboard", new { id = corkboard.Cid }, null) </strong>  <span style="color:red;">(private)</span>
                 </label>
             </li>
+            <p style="margin:0px 16px 0px 0px ; text-indent: 16px">
+                Updated by <strong>@Model.recentCorkboardOwners[corkboard.Title]</strong>  on <strong>@corkboard.DateTime</strong> 
+            </p>
         }
         else
         {
-            <li>
-                <label>
-                    @Html.ActionLink(corkboard.Title, "ViewCorkboard", "Corkboard", new { id = corkboard.Cid }, null) with Pushpins
+            <li style="list-style-type:none">
+                <label >
+                    <strong>@Html.ActionLink(corkboard.Title, "ViewCorkboard", "Corkboard", new { id = corkboard.Cid }, null)</strong>
                 </label>
             </li>
+            <p style="margin:0px 16px 0px 0px ; text-indent: 16px"> 
+                Updated by <strong>@Model.recentCorkboardOwners[corkboard.Title]</strong> on <strong>@corkboard.DateTime</strong> 
+            </p>
         }
 
     }
 </ul>
-       
+
+    }
+</section>
+<br />
+<hr />
+<section class="row">
+    <div class="form-group">
+        <div class="col-md-10">
+            <label id="mycorkboard"><strong>My CorkBoards</strong></label>
+            <input id="buttonaddcorkboard" onclick="window.location.href='@Url.Action("AddCorkboard", "CorkBoard")';" type="submit" class="btn btn-primary btn-default" value="Add CorkBoard" />
+        </div>
+    </div>
+    <hr />
+    @if (!Model.myCorkboards.Any())
+    {
+        <p style="margin:0px 16px 0px 0px ; text-indent: 16px">You have no CorkBoards yet.</p>
+    }
+    else
+    {
+        <ul class="row">
+            @foreach (var corkboard in Model.myCorkboards)
+            {
+                if (corkboard.VisibilityId == 1)
+                {
+                    <li style="list-style-type:none">
+                        <label>
+                            <strong>@Html.ActionLink(corkboard.Title, "ConfirmPrivateCorkboard", "Corkboard", new { id = corkboard.Cid }, null)</strong> <span style="color:red;">(private)</span> with @Model.pushpinCount[corkboard.Title] Pushpins
+                        </label>
+                    </li>
+                }
+                else
+                {
+                    <li style="list-style-type:none">
+                        <label>
+                            <strong>@Html.ActionLink(corkboard.Title, "ViewCorkboard", "Corkboard", new { id = corkboard.Cid }, null) </strong> with @Model.pushpinCount[corkboard.Title] Pushpins
+                        </label>
+                    </li>
+                }
+
+            }
+        </ul>
+
     }
     <br />
     <hr />
-    <div class="form-group">
-        <div class="col-md-10">
-            @Html.TextBox("Text", null, htmlAttributes: new { @class = "form-control", PlaceHolder = "Search descriptions, tags and CorkBoard category" })
-            <span>
-                <input id="buttonaddcorkboard" type="submit" class="btn btn-default" value="PushPin Search" />
-            </span>
-        </div>
+<form action="@Url.Action("SearchPushpin", "Pushpin")" method="get">
+    <div class="form-group" style="display:inline-block;vertical-align:top;margin:4px 32px 4px 32px;">
+        <span style="float:left;width:300px;">
+            @Html.TextBoxFor(m => m.whatToSearch, null, htmlAttributes: new { @class = "form-control", PlaceHolder = "Search descriptions, tags and CorkBoard category" })
+        </span>
+        <input id="buttonsearch" type="submit" class="btn btn-info btn-default" value="PushPin Search" />
     </div>
+</form>
+    
 </section>
 
